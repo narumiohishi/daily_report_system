@@ -18,11 +18,8 @@ body {
 }
 
 h1 {
-    width: 94%;
-    padding-top: 17px;
-    padding-left: 3%;
     font-size: 24px;
-    color: #eeeeee;
+    display: inline;
 }
 
 h2 {
@@ -91,22 +88,26 @@ button {
     color: #721c24;
     background-color: #f8d7da;
 }
-table#employee_list th {
-    width: 30%;
-    padding: 10px 2%;
+
+#header_menu {
+    width: 57%;
+    padding-top: 17px;
+    padding-left: 3%;
+    display: inline-block;
 }
 
-table#employee_list td {
-    width: 29%;
-    padding: 10px 2%;
+#employee_name {
+    color: #cccccc;
+    width: 36%;
+    padding-right: 3%;
+    text-align: right;
+    display: inline-block;
 }
 
-tr.row1 {
-        background-color: #f2f2f2;
+#header a {
+    color: #eeeeee;
 }
-tr.row0 {
-        background-color: #ffffff;
-        }
-select {
-    height: 30px;
+
+h1 a {
+    color: #eeeeee;
 }
