@@ -41,8 +41,7 @@ public class EmployeesUpdateServlet extends HttpServlet {
 
             Employee e = em.find(Employee.class, (Integer)(request.getSession().getAttribute("employee_id")));
 
-            // 現在の値と異なる社員番号が入力されていたら
-            // 重複チェックを行う指定をする
+
             Boolean codeDuplicateCheckFlag = true;
             if(e.getCode().equals(request.getParameter("code"))) {
                 codeDuplicateCheckFlag = false;
@@ -50,8 +49,7 @@ public class EmployeesUpdateServlet extends HttpServlet {
                 e.setCode(request.getParameter("code"));
             }
 
-            // パスワード欄に入力があったら
-            // パスワードの入力値チェックを行う指定をする
+
             Boolean passwordCheckFlag = true;
             String password = request.getParameter("password");
             if(password == null || password.equals("")) {
