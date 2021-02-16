@@ -50,6 +50,7 @@ public class ReportsCreateServlet extends HttpServlet {
                 report_date = Date.valueOf(request.getParameter("report_date"));
             }
             r.setReport_date(report_date);
+            //下記を追加
 
             r.setTitle(request.getParameter("title"));
             r.setContent(request.getParameter("content"));
@@ -57,6 +58,7 @@ public class ReportsCreateServlet extends HttpServlet {
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             r.setCreated_at(currentTime);
             r.setUpdated_at(currentTime);
+            r.setReports_push(0);
 
             List<String> errors = ReportValidator.validate(r);
             if(errors.size() > 0) {
