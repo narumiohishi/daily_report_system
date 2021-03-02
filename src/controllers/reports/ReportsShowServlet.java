@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
 import models.Report;
 import utils.DBUtil;
 
@@ -34,10 +35,17 @@ public class ReportsShowServlet extends HttpServlet {
         EntityManager em = DBUtil.createEntityManager();
 
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+
+        long Pushlist_pushCount = (long)em.createNamedQuery("getMyPushlist_pushCount", Long.class)
+                .setParameter("employee", login_employee)
+                .setParameter("report", r)
+                .getSingleResult();
 
         em.close();
 
         request.setAttribute("report", r);
+        request.setAttribute("pushlist_pushCount", Pushlist_pushCount);
         request.setAttribute("_token", request.getSession().getId());
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");

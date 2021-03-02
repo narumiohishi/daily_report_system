@@ -23,7 +23,14 @@
                         <td class="report_name"><c:out value="${report.employee.name}" /></td>
                         <td class="report_date"><fmt:formatDate value='${report.report_date}' pattern='yyyy-MM-dd' /></td>
                         <td class="report_title">${report.title}</td>
-                        <td class="report_push"><c:out value="${report.reports_push}" /></td>
+                        <c:choose>
+                                <c:when test="${report.reports_push==0}">
+                                    <td class="report_push"><c:out value="${report.reports_push}"/></td>
+                                </c:when>
+                            <c:otherwise>
+                                    <td class="report_push"><a href="<c:url value='/pushlist/index?id=${report.id}' />"><c:out value="${report.reports_push}"/></a></td>
+                            </c:otherwise>
+                        </c:choose>
                         <td class="report_action"><a href="<c:url value='/reports/show?id=${report.id}' />">詳細を見る</a></td>
                     </tr>
                 </c:forEach>
