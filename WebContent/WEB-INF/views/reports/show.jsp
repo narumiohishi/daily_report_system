@@ -55,6 +55,9 @@
                 <c:if test="${pushlist_pushCount==0&&sessionScope.login_employee.id != report.employee.id}">
                     <p><a href="<c:url value="/reports/push?id=${report.id}" />">この日報にいいねする</a></p>
                 </c:if>
+                <c:if test="${followlist_list==0&&sessionScope.login_employee.id != report.employee.id}">
+                    <p><a href="<c:url value="/followlist/push?id=${report.id}" />">この作成者をフォローする</a></p>
+                </c:if>
             </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>

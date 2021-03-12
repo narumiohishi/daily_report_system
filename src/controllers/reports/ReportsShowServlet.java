@@ -42,10 +42,16 @@ public class ReportsShowServlet extends HttpServlet {
                 .setParameter("report", r)
                 .getSingleResult();
 
+        long Followlist_list = (long)em.createNamedQuery("getMyFollowlist_list", Long.class)
+                .setParameter("employee", login_employee)
+                .setParameter("follow_employee", r.getEmployee())
+                .getSingleResult();
+
         em.close();
 
         request.setAttribute("report", r);
         request.setAttribute("pushlist_pushCount", Pushlist_pushCount);
+        request.setAttribute("followlist_list", Followlist_list);
         request.setAttribute("_token", request.getSession().getId());
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
