@@ -8,8 +8,8 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2></h2>
-        <h3>【フォローしている日報　一覧】</h3>
+        <h2>フォローしている日報 一覧</h2>
+        <h3></h3>
         <table id="followlist_list">
             <tbody>
                 <tr>

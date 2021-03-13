@@ -18,13 +18,13 @@ import utils.DBUtil;
  * Servlet implementation class FollowlistPush
  */
 @WebServlet("/followlist/push")
-public class FollowlistPush extends HttpServlet {
+public class FollowlistPushServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FollowlistPush() {
+    public FollowlistPushServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

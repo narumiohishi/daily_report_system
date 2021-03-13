@@ -20,13 +20,13 @@ import utils.DBUtil;
  * Servlet implementation class Pushlistindex
  */
 @WebServlet("/pushlist/index")
-public class Pushlistindex extends HttpServlet {
+public class PushlistindexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Pushlistindex() {
+    public PushlistindexServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
