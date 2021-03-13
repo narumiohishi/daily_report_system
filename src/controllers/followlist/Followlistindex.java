@@ -36,20 +36,25 @@ public class Followlistindex extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // セッションスコープに保存された従業員（ログインユーザ）情報を取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
+        // 開くページ数を取得（1ページ目は必ず例外になる）
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page = 1;
         }
+
+        // 最大件数と開始位置を指定して"getMyFollowlist"の代入条件に1つ設定して日報情報を取得
         List<Report> followlist = em.createNamedQuery("getMyFollowlist", Report.class)
                 .setParameter("employee",login_employee)
                 .setFirstResult(15 * (page - 1))
                 .setMaxResults(15)
                 .getResultList();
 
+        //"getMyFollowlist_Count"の代入条件に1つ設定して全件数を取得
         long followlist_count = (long)em.createNamedQuery("getMyFollowlist_Count", Long.class)
                 .setParameter("employee",login_employee)
                 .getSingleResult();
@@ -60,13 +65,15 @@ public class Followlistindex extends HttpServlet {
         request.setAttribute("followlist_count", followlist_count);
         request.setAttribute("page", page);
 
+        // フラッシュメッセージがセッションスコープにセットされていたら
         if(request.getSession().getAttribute("flush") != null) {
+            // セッションスコープ内のフラッシュメッセージをリクエストスコープに保存し、セッションスコープからは削除する
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
 
+        //followlist/index.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/followlist/index.jsp");
         rd.forward(request, response);
     }
-
 }

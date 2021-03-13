@@ -33,14 +33,21 @@ public class EmployeesEditServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // パラメータから取得した該当のIDの従業員1件のみをデータベースから取得
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
 
         em.close();
 
+        // 従業員情報とセッションIDをリクエストスコープに登録
         request.setAttribute("employee", e);
+
+        // CSRF対策
         request.setAttribute("_token", request.getSession().getId());
+
+        // 従業員IDをセッションスコープに登録
         request.getSession().setAttribute("employee_id", e.getId());
 
+        //employees/edit.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/edit.jsp");
         rd.forward(request, response);
     }

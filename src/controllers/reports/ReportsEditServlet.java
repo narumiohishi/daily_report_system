@@ -34,19 +34,24 @@ public class ReportsEditServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // パラメータから取得した該当のIDの日報を1件のみをデータベースから取得
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
-
         em.close();
 
+        // セッションスコープに保存された従業員（ログインユーザ）情報を取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+
+
         if(r != null && login_employee.getId() == r.getEmployee().getId()) {
             request.setAttribute("report", r);
+
+            // CSRF対策
             request.setAttribute("_token", request.getSession().getId());
             request.getSession().setAttribute("report_id", r.getId());
         }
 
+        //reports/edit.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/edit.jsp");
         rd.forward(request, response);
     }
-
 }

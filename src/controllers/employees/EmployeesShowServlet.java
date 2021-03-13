@@ -33,10 +33,12 @@ public class EmployeesShowServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // パラメータから取得した該当のIDの従業員1件のみをデータベースから取得
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
 
         em.close();
 
+        // 従業員データをリクエストスコープにセットしてshow.jspを呼び出す
         request.setAttribute("employee", e);
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");

@@ -36,9 +36,10 @@ public class Pushlistindex extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
-        // 該当のIDのメッセージ1件のみをデータベースから取得
+        // パラメータから取得した該当のIDの日報を1件のみをデータベースから取得
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
+        // 開くページ数を取得（1ページ目は必ず例外になる）
         int page ;
         try{
             page = Integer.parseInt(request.getParameter("page"));
@@ -46,25 +47,26 @@ public class Pushlistindex extends HttpServlet {
             page=1;
         }
 
-        //データベースにアクセスし、該当のレコードを取得
+        // 最大件数と開始位置を指定して"getMyAllPushlist"の代入条件を1つ設定して日報情報を取得
         List<Pushlist> pushlist = em.createNamedQuery("getMyAllPushlist", Pushlist.class)
                                   .setParameter("report", r)
                                   .setFirstResult(15 * (page - 1))
                                   .setMaxResults(15)
                                   .getResultList();
-        //データベースにアクセスし、該当のレコード数を取得
+
+        //"getMyPushlistCount"の代入条件を1つ設定して全件数を取得
         long Pushlist_count = (long)em.createNamedQuery("getMyPushlistCount", Long.class)
                                      .setParameter("report", r)
                                      .getSingleResult();
 
         em.close();
-        // 取得したレコード情報が入ったリストをリクエストスコープに登録
+
+        //各取得データをリクエストスコープにセットして/pushlist/index.jspを呼び出す
         request.setAttribute("pushlist", pushlist);
         request.setAttribute("pushlist_count", Pushlist_count);
         request.setAttribute("page", page);
         request.setAttribute("report", r);
 
-        //pushlist/index.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/pushlist/index.jsp");
         rd.forward(request, response);
     }

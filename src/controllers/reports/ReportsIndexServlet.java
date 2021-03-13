@@ -34,17 +34,20 @@ public class ReportsIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // 開くページ数を取得（1ページ目は必ず例外になる）
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page = 1;
         }
+
+        // 最大件数と開始位置を指定して日報情報を取得
         List<Report> reports = em.createNamedQuery("getAllReports", Report.class)
                                   .setFirstResult(15 * (page - 1))
                                   .setMaxResults(15)
                                   .getResultList();
-
+        // 全件数を取得
         long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
                                      .getSingleResult();
 
@@ -53,13 +56,16 @@ public class ReportsIndexServlet extends HttpServlet {
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
+
+        // フラッシュメッセージがセッションスコープにセットされていたら
         if(request.getSession().getAttribute("flush") != null) {
+            // セッションスコープ内のフラッシュメッセージをリクエストスコープに保存し、セッションスコープからは削除する
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
 
+        //reports/index.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
         rd.forward(request, response);
     }
-
 }

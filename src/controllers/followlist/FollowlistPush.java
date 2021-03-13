@@ -33,28 +33,30 @@ public class FollowlistPush extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         EntityManager em = DBUtil.createEntityManager();
+
+        // パラメータから取得した該当のIDの日報を1件のみをデータベースから取得
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
+        //Followlistのインスタンスを生成
         Followlist f = new Followlist();
 
+        // 各フィールドにデータを代入
         f.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
         f.setFollow_employee((r.getEmployee()));
-
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         f.setCreated_at(currentTime);
         f.setUpdated_at(currentTime);
 
-            em.getTransaction().begin();
-            em.persist(f);
-            em.getTransaction().commit();
-            em.close();
-            request.getSession().setAttribute("flush", "フォローしました");
+        // データベースに保存
+        em.getTransaction().begin();
+        em.persist(f);
+        em.getTransaction().commit();
+        em.close();
+        request.getSession().setAttribute("flush", "フォローしました");
 
-            response.sendRedirect(request.getContextPath() + "/followlist/index");
-
-
+        //followlist/indexのページにリダイレクト
+        response.sendRedirect(request.getContextPath() + "/followlist/index");
     }
 }
 

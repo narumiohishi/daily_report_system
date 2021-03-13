@@ -19,14 +19,6 @@ import javax.persistence.Table;
 @Table(name = "pushlist")
 @NamedQueries({
     @NamedQuery(
-        name = "getAllPushlist",
-        query = "SELECT p FROM Pushlist AS p ORDER BY p.id DESC"
-    ),
-    @NamedQuery(
-        name = "getPushlistCount",
-        query = "SELECT COUNT(p) FROM Report AS p"
-    ),
-    @NamedQuery(
         name = "getMyAllPushlist",
         query = "SELECT p FROM Pushlist AS p WHERE p.report = :report ORDER BY p.id DESC"
     ),
@@ -35,9 +27,9 @@ import javax.persistence.Table;
         query = "SELECT COUNT(p) FROM Pushlist AS p WHERE p.report = :report"
     ),
     @NamedQuery(
-            name = "getMyPushlist_pushCount",
-            query = "SELECT COUNT(p) FROM Pushlist AS p WHERE p.employee = :employee and p.report = :report"
-    ),
+        name = "getMyPushlist_pushCount",
+        query = "SELECT COUNT(p) FROM Pushlist AS p WHERE p.employee = :employee and p.report = :report"
+    )
 
 })
 @Entity

@@ -34,14 +34,19 @@ public class ReportsShowServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // 該当のIDの日報を1件のみをデータベースから取得
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
+
+        // セッションスコープに保存された従業員（ログインユーザ）情報を取得
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
+        // "getMyPushlist_pushCount"の代入条件を2つ設定して指定の日報に対してのいいねの数を取得
         long Pushlist_pushCount = (long)em.createNamedQuery("getMyPushlist_pushCount", Long.class)
                 .setParameter("employee", login_employee)
                 .setParameter("report", r)
                 .getSingleResult();
 
+        // "getMyFollowlist_list"の代入条件を2つ設定してログインユーザの指定の日報作成者にフォローの数を取得
         long Followlist_list = (long)em.createNamedQuery("getMyFollowlist_list", Long.class)
                 .setParameter("employee", login_employee)
                 .setParameter("follow_employee", r.getEmployee())
@@ -49,6 +54,7 @@ public class ReportsShowServlet extends HttpServlet {
 
         em.close();
 
+        //各取得データをリクエストスコープにセットして/reports/show.jspを呼び出す
         request.setAttribute("report", r);
         request.setAttribute("pushlist_pushCount", Pushlist_pushCount);
         request.setAttribute("followlist_list", Followlist_list);

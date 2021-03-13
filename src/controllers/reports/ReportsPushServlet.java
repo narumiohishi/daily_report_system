@@ -29,35 +29,34 @@ public class ReportsPushServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
             EntityManager em = DBUtil.createEntityManager();
 
+            // 該当のIDの日報を1件のみをデータベースから取得
             Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
+            //いいね数が1ずつ増えるようにフィールドにデータを代入
             int count = r.getReports_push() + 1;
             r.setReports_push(count);
 
+            //Pushlistのインスタンスを生成
             Pushlist p = new Pushlist();
 
+            // 各フィールドにデータを代入
             p.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
-
             p.setReport(r);
-
-
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             p.setCreated_at(currentTime);
             p.setUpdated_at(currentTime);
 
+            // データベースに保存
+            em.getTransaction().begin();
+            em.persist(p);
+            em.getTransaction().commit();
+            em.close();
+            request.getSession().setAttribute("flush", "いいねしました");
 
-                em.getTransaction().begin();
-                em.persist(p);
-                em.getTransaction().commit();
-                em.close();
-                request.getSession().setAttribute("flush", "いいねしました");
-
-                response.sendRedirect(request.getContextPath() + "/reports/index");
-
-
+            // reports/indexのページにリダイレクト
+            response.sendRedirect(request.getContextPath() + "/reports/index");
         }
     }
 

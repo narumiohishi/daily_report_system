@@ -34,15 +34,18 @@ public class EmployeesIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        // 開くページ数を取得（デフォルトは1ページ目）
         int page = 1;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(NumberFormatException e) { }
+
+        // 最大件数と開始位置を指定して従業員情報を取得
         List<Employee> employees = em.createNamedQuery("getAllEmployees", Employee.class)
                                      .setFirstResult(15 * (page - 1))
                                      .setMaxResults(15)
                                      .getResultList();
-
+        // 全件数を取得
         long employees_count = (long)em.createNamedQuery("getEmployeesCount", Long.class)
                                        .getSingleResult();
 
@@ -51,11 +54,15 @@ public class EmployeesIndexServlet extends HttpServlet {
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
         request.setAttribute("page", page);
+
+        // フラッシュメッセージがセッションスコープにセットされていたら
         if(request.getSession().getAttribute("flush") != null) {
+        // セッションスコープ内のフラッシュメッセージをリクエストスコープに保存し、セッションスコープからは削除する
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
 
+        //employees/index.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);
     }
