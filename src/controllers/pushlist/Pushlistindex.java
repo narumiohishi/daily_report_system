@@ -36,32 +36,35 @@ public class Pushlistindex extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
-
+        // 該当のIDのメッセージ1件のみをデータベースから取得
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
-        int page;
+        int page ;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
-            page = 1;
+            page=1;
         }
+
+        //データベースにアクセスし、該当のレコードを取得
         List<Pushlist> pushlist = em.createNamedQuery("getMyAllPushlist", Pushlist.class)
                                   .setParameter("report", r)
                                   .setFirstResult(15 * (page - 1))
                                   .setMaxResults(15)
                                   .getResultList();
-
+        //データベースにアクセスし、該当のレコード数を取得
         long Pushlist_count = (long)em.createNamedQuery("getMyPushlistCount", Long.class)
                                      .setParameter("report", r)
                                      .getSingleResult();
 
         em.close();
-
+        // 取得したレコード情報が入ったリストをリクエストスコープに登録
         request.setAttribute("pushlist", pushlist);
         request.setAttribute("pushlist_count", Pushlist_count);
         request.setAttribute("page", page);
+        request.setAttribute("report", r);
 
-
+        //pushlist/index.jspを呼び出す
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/pushlist/index.jsp");
         rd.forward(request, response);
     }

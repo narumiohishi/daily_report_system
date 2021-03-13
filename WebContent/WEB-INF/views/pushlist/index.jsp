@@ -15,7 +15,6 @@
                 <tr>
                     <th class="employee_id">氏名</th>
                     <th class="created_at">日付</th>
-
                 </tr>
                 <c:forEach var="pushlist" items="${pushlist}" varStatus="status">
                     <tr class="row${status.count % 2}">
@@ -35,7 +34,7 @@
                         <c:out value="${i}" />&nbsp;
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='/?page=${i}' />"><c:out value="${i}" /></a>&nbsp;
+                        <a href="<c:url value='/pushlist/index?page=${i}&id=${report.id}' />"><c:out value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
